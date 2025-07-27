@@ -1,0 +1,26 @@
+---
+- name: Deploy Node.js App using Docker
+  hosts: web
+  become: true
+
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull app image from DockerHub
+      command: docker pull sahilc08/myapp:latest
+
+    - name: Run the Docker container
+      command: docker run -d -p 80:3000 --name myapp sahilc08/myapp:latest
