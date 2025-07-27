@@ -22,5 +22,9 @@
     - name: Pull app image from DockerHub
       command: docker pull sahilc08/myapp:latest
 
+    - name: Remove existing Docker container if exists
+      shell: docker rm -f myapp || true
+
     - name: Run the Docker container
       command: docker run -d -p 80:3000 --name myapp sahilc08/myapp:latest
+
