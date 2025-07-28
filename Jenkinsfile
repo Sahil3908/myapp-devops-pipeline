@@ -23,19 +23,17 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
+                    sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push $DOCKER_IMAGE:$DOCKER_TAG
-                    """
+                    '''
                 }
             }
         }
 
         stage('Deploy with Ansible') {
             steps {
-                sh '''
-                    ansible-playbook -i ansible/inventory ansible/deploy.yml
-                '''
+                sh 'ansible-playbook -i ansible/inventory ansible/deploy.yml'
             }
         }
     }
