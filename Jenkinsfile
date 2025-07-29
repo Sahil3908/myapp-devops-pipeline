@@ -33,7 +33,10 @@ pipeline {
 
         stage('Deploy with Ansible') {
             steps {
-                sh 'ansible-playbook -i ansible/inventory ansible/deploy.yml'
+                // Disable SSH host key checking to avoid interactive prompt
+                sh '''
+                    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory ansible/deploy.yml
+                '''
             }
         }
     }
