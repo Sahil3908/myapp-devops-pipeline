@@ -13,18 +13,36 @@
         name: docker.io
         state: present
 
-    - name: Start Docker service
+    - name: Start and enable Docker service
       service:
         name: docker
         state: started
-        enabled: yes
+        enabled: true
+
+    - name: Login to DockerHub (optional, only if using private repo)
+      docker_login:
+        username: "{{ docker_username | default(omit) }}"
+        password: "{{ docker_password | default(omit) }}"
+      when: docker_username is defined and docker_password is defined
 
     - name: Pull app image from DockerHub
-      command: docker pull sahilc08/myapp:latest
+      docker_image:
+        name: sahilc08/myapp
+        tag: latest
+        source: pull
 
-    - name: Remove existing Docker container if exists
-      shell: docker rm -f myapp || true
+    - name: Remove existing container if exists
+      docker_container:
+        name: myapp
+        state: absent
+        force_kill: true
 
-    - name: Run the Docker container
-      command: docker run -d -p 80:3000 --name myapp sahilc08/myapp:latest
+    - name: Run Docker container
+      docker_container:
+        name: myapp
+        image: sahilc08/myapp:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:3000"
 
