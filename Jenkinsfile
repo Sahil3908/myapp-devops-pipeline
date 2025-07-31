@@ -30,18 +30,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy with Ansible') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'USER')]) {
-                    sh '''
-                        ANSIBLE_HOST_KEY_CHECKING=False \
-                        ansible-playbook -i ansible/inventory ansible/deploy.yml \
-                        --user=$USER --private-key=$SSH_KEY
-                    '''
-                }
-            }
-        }
     }
 }
-
