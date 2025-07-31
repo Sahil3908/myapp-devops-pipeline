@@ -1,4 +1,4 @@
-[web]
-3.111.193.156
+[myec2]
+3.111.193.156 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devopscase.pem ansible_python_interpreter=/usr/bin/python3
 
 
