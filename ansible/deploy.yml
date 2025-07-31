@@ -1,12 +1,23 @@
 - name: Deploy MyApp to EC2
   hosts: myec2
   become: yes
+
+  vars:
+    docker_user: "your_dockerhub_username"
+    docker_password: "your_dockerhub_password"
+
   tasks:
     - name: Ensure Docker is installed
       apt:
         name: docker.io
         state: present
         update_cache: yes
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: true
 
     - name: Log in to Docker Hub
       shell: echo "{{ docker_password }}" | docker login -u "{{ docker_user }}" --password-stdin
