@@ -16,16 +16,16 @@ pipeline {
         }
 
         stage('Terraform Init & Apply') {
-            steps {
-                echo "🛠️ Running Terraform..."
-                dir('infra') {
-                    sh '''
-                        terraform init
-                        terraform apply -auto-approve
-                    '''
-                }
-            }
+    steps {
+        echo "🛠️ Running Terraform..."
+        dir('infra') {
+            sh '''
+                terraform init
+                terraform apply -auto-approve
+            '''
         }
+    }
+}
 
         stage('Build Docker Image') {
             steps {
