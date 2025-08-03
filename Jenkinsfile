@@ -8,30 +8,10 @@ pipeline {
 
     stages {
 
-        stage('Checkout SCM') {
+        stage('Checkout Code') {
             steps {
                 echo "Checking out code from GitHub..."
-                checkout scm
-            }
-        }
-
-        stage('Provision Infrastructure - Terraform') {
-            steps {
-                echo "Initializing and applying Terraform..."
-                dir('infra') {
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'aws-creds',
-                            usernameVariable: 'AWS_ACCESS_KEY_ID',
-                            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                        )
-                    ]) {
-                        sh '''
-                            terraform init
-                            terraform apply -auto-approve
-                        '''
-                    }
-                }
+                git branch: 'main', url: 'https://github.com/Sahil3908/myapp-devops-pipeline.git'
             }
         }
 
@@ -44,7 +24,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                echo "Pushing Docker image to Docker Hub..."
+                echo "Logging into Docker Hub and pushing image..."
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'dockerhub-creds',
@@ -60,7 +40,6 @@ pipeline {
                 }
             }
         }
-
     }
 
     post {
@@ -68,8 +47,7 @@ pipeline {
             echo "Pipeline completed successfully!"
         }
         failure {
-            echo "Pipeline failed. Check the logs."
+            echo "Pipeline failed. Check the logs for details."
         }
     }
 }
-
