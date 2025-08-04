@@ -15,17 +15,15 @@ pipeline {
             }
         }
 
-        stage('Terraform Init & Apply') {
-    steps {
-        echo "🛠️ Running Terraform..."
-        dir('infra') {
-            sh '''
-                terraform init
-                terraform apply -auto-approve
-            '''
+        stage('Provision Infrastructure') {
+            steps {
+                dir('infra') {
+                sh 'terraform init'
+                sh 'terraform plan'
+                sh 'terraform apply -auto-approve'
+            }
+          }
         }
-    }
-}
 
         stage('Build Docker Image') {
             steps {
