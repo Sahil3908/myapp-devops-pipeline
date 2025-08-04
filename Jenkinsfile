@@ -15,16 +15,6 @@ pipeline {
             }
         }
 
-        stage('Provision Infrastructure') {
-            steps {
-                dir('infra') {
-                sh 'terraform init'
-                sh 'terraform plan'
-                sh 'terraform apply -auto-approve'
-            }
-          }
-        }
-
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image..."
@@ -61,4 +51,3 @@ pipeline {
         }
     }
 }
-
