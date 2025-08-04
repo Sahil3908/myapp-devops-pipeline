@@ -70,9 +70,7 @@ Pull the Node.js image
 Run the container on port 80
 
 Ansible Playbook Command:
-bash
-Copy
-Edit
+
 ansible-playbook -i inventory deploy.yml -e "docker_user=sahilc08 docker_password=yourpassword"
 
 ⚙️ Jenkins Pipeline Execution
@@ -87,10 +85,35 @@ Terraform Apply
 Ansible Deploy
 
 🐞 Errors Faced & Fixes
-❌ Error / Issue	🛠️ Solution
-Jenkins stuck at “Gathering Facts”	Restarted EC2, pruned Docker system, ensured sufficient memory
-Docker login failed in Ansible	Passed credentials using -e flags and ensured correct DockerHub creds
-Terraform timeout on EC2	Checked SSH key pair, verified EC2 instance availability zone
-WSL2 crash during build	Removed .vscode-server from WSL and restarted terminal
-EC2 not accessible from browser	Verified security group settings to allow HTTP (80) and assigned Elastic IP
-Jenkins pipeline failed on git clone	Installed Git plugin and configured Git executable in Jenkins
+
+Jenkins stuck at “Gathering Facts” during Ansible playbook
+
+✅ Fix: Restarted EC2 instance, cleared Docker cache using docker system prune -a, and increased memory allocation.
+
+Ansible Docker login failed
+
+✅ Fix: Used extra vars -e flag to pass DockerHub username and password securely in the CLI.
+
+Terraform apply timed out or hung on EC2 provisioning
+
+✅ Fix: Verified SSH key pair, ensured correct AMI ID, and selected an available availability zone (ap-south-1a).
+
+Docker build failing due to permission errors
+
+✅ Fix: Ran Docker commands with sudo, added user to docker group, and restarted Docker daemon.
+
+EC2 instance not accessible via public IP
+
+✅ Fix: Checked security group rules — added inbound rules for port 22 (SSH) and port 80 (HTTP).
+
+Jenkins build failing at Git checkout stage
+
+✅ Fix: Installed Git plugin in Jenkins and configured the Git path in Jenkins system settings.
+
+WSL2 crashing while building Docker image
+
+✅ Fix: Cleared unnecessary files in WSL, especially .vscode-server, and restarted the WSL2 subsystem.
+
+Docker container not starting on EC2
+
+✅ Fix: Checked Ansible logs, verified image pull from DockerHub, and ensured ports were exposed properly in the Dockerfile.
